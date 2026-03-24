@@ -1,0 +1,69 @@
+{% extends 'rango/base.html' %}
+
+{% block title_block %}
+Profile
+{% endblock %}
+
+{% block body_block %}
+<section class="profile-banner">
+    <div class="profile-avatar">E</div>
+
+    <div class="profile-main">
+        <h1>Erin</h1>
+        <p>FILM LOVER</p>
+
+        <div class="profile-stats-line">
+            <div>
+                <span>45</span>
+                <small>WATCHED</small>
+            </div>
+
+            <div>
+                <span>12</span>
+                <small>FAVOURITES</small>
+            </div>
+
+            <div>
+                <span>8</span>
+                <small>REVIEWS</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content-page home-page-bg">
+    <div class="row-section">
+        <h2>Favourite <span>Movies</span></h2>
+
+        <div class="poster-row">
+            {% for movie in favourite_movies %}
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' %}">
+                    <div class="poster-placeholder">MOVIE POSTER</div>
+                </a>
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>{{ movie }}</h3>
+                <p class="poster-meta">Favourite <span class="mini-roses">• • • • •</span></p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row-section">
+        <h2>Recently <span>Watched</span></h2>
+
+        <div class="poster-row smaller-row">
+            {% for movie in recently_watched %}
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' %}">
+                    <div class="poster-placeholder">MOVIE POSTER</div>
+                </a>
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>{{ movie }}</h3>
+                <p class="poster-meta">Watched recently <span class="mini-roses">• • • •</span></p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'rango/base.html' %}
+
+{% block title_block %}
+Register
+{% endblock %}
+
+{% block body_block %}
+<section class="login-page">
+
+    <div class="login-left">
+        <div class="login-quote">
+            Every rose<br>
+            thrown<br>
+            is a<br>
+            <span>performance</span><br>
+            remembered.
+        </div>
+    </div>
+
+    <div class="login-right">
+        <div class="login-panel">
+
+            <div class="login-tabs">
+                <a href="{% url 'rango:login' %}">LOGIN</a>
+                <a href="{% url 'rango:register' %}" class="active">JOIN THE THEATRE</a>
+            </div>
+
+            <div class="login-form-wrap">
+                <h2>Join the theatre.</h2>
+
+                <form method="post" class="login-form">
+                    {% csrf_token %}
+
+                    <label for="id_email">EMAIL</label>
+                    <input type="email" name="email" id="id_email" placeholder="you@example.com">
+
+                    <label for="id_username">USERNAME</label>
+                    <input type="text" name="username" id="id_username" placeholder="choose a username">
+
+                    <label for="id_password1">PASSWORD</label>
+                    <input type="password" name="password1" id="id_password1" placeholder="********">
+
+                    <label for="id_password2">CONFIRM PASSWORD</label>
+                    <input type="password" name="password2" id="id_password2" placeholder="********">
+
+                    <input type="submit" value="JOIN THE THEATRE" class="login-submit">
+                </form>
+
+                <p class="join-link">
+                    Already have an account? <a href="{% url 'rango:login' %}">Login</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+{% endblock %}
