@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from .models import UserProfile, Movie, Favourite, WatchHistory
+from .models import UserProfile, Movie
 
 
 def index(request):
@@ -62,21 +62,11 @@ def discover(request):
     query = request.GET.get('q', '').strip()
 
     if query:
-        movies = list(Movie.objects.filter(title__icontains=query).values_list('title', flat=True))
+        movies = list(
+            Movie.objects.filter(title__icontains=query).values_list('title', flat=True)
+        )
     else:
         movies = list(Movie.objects.values_list('title', flat=True))
-
-    if not movies:
-        movies = [
-            "Sinners",
-            "Conclave",
-            "The Meg",
-            "Fresh",
-            "Twisters",
-            "The Housemaid",
-            "Now You See Me",
-            "Mirror Mirror"
-        ]
 
     return render(request, 'rango/discover.html', {'movies': movies})
 
@@ -95,19 +85,8 @@ def profile(request):
             .values_list('title', flat=True)[:4]
         )
     else:
-        favourite_movies = [
-            "Sinners",
-            "Taken",
-            "Panic",
-            "Mirror Mirror"
-        ]
-
-        recently_watched = [
-            "The Meg",
-            "Fresh",
-            "Twisters",
-            "Now You See Me"
-        ]
+        favourite_movies = []
+        recently_watched = []
 
     context = {
         'favourite_movies': favourite_movies,
@@ -120,4 +99,4 @@ def profile(request):
 def movie_detail(request):
     movie = Movie.objects.first()
     context = {'movie': movie}
-    return render(request, 'rango/movie_detail.html', context)
+    return render(request, 'rango/movieDetail.html', context)
