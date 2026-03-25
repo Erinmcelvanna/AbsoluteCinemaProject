@@ -1,41 +1,113 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from .models import UserProfile, Movie, Favourite, WatchHistory
+
 
 def index(request):
     return render(request, 'rango/index.html')
 
+
+def home(request):
+    return render(request, 'rango/home.html')
+
+
 def register_view(request):
-    return render(request, 'rango/register.html')
+    context = {}
+
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+
+        if not email or not username or not password1 or not password2:
+            context['error'] = 'Please fill in all fields.'
+        elif password1 != password2:
+            context['error'] = 'Passwords do not match.'
+        elif User.objects.filter(username=username).exists():
+            context['error'] = 'Username already exists.'
+        else:
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password1
+            )
+            UserProfile.objects.get_or_create(user=user)
+            login(request, user)
+            return redirect('rango:profile')
+
+    return render(request, 'rango/register.html', context)
+
 
 def login_view(request):
-    return render(request, 'rango/login.html')
+    context = {}
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('rango:profile')
+        else:
+            context['error'] = 'Invalid username or password.'
+
+    return render(request, 'rango/login.html', context)
+
 
 def discover(request):
-    movies = [
-        "Sinners",
-        "Conclave",
-        "The Meg",
-        "Fresh",
-        "Twisters",
-        "The Housemaid",
-        "Now You See Me",
-        "Mirror Mirror"
-    ]
+    query = request.GET.get('q', '').strip()
+
+    if query:
+        movies = list(Movie.objects.filter(title__icontains=query).values_list('title', flat=True))
+    else:
+        movies = list(Movie.objects.values_list('title', flat=True))
+
+    if not movies:
+        movies = [
+            "Sinners",
+            "Conclave",
+            "The Meg",
+            "Fresh",
+            "Twisters",
+            "The Housemaid",
+            "Now You See Me",
+            "Mirror Mirror"
+        ]
+
     return render(request, 'rango/discover.html', {'movies': movies})
 
-def profile(request):
-    favourite_movies = [
-        "Sinners",
-        "Taken",
-        "Panic",
-        "Mirror Mirror"
-    ]
 
-    recently_watched = [
-        "The Meg",
-        "Fresh",
-        "Twisters",
-        "Now You See Me"
-    ]
+def profile(request):
+    if request.user.is_authenticated:
+        favourite_movies = list(
+            Movie.objects.filter(favourited_by__user=request.user)
+            .distinct()
+            .values_list('title', flat=True)
+        )
+
+        recently_watched = list(
+            Movie.objects.filter(watch_histories__user=request.user)
+            .distinct()
+            .values_list('title', flat=True)[:4]
+        )
+    else:
+        favourite_movies = [
+            "Sinners",
+            "Taken",
+            "Panic",
+            "Mirror Mirror"
+        ]
+
+        recently_watched = [
+            "The Meg",
+            "Fresh",
+            "Twisters",
+            "Now You See Me"
+        ]
 
     context = {
         'favourite_movies': favourite_movies,
@@ -44,5 +116,8 @@ def profile(request):
 
     return render(request, 'rango/profile.html', context)
 
+
 def movie_detail(request):
-    return render(request, 'rango/movie_detail.html')
+    movie = Movie.objects.first()
+    context = {'movie': movie}
+    return render(request, 'rango/movie_detail.html', context)
