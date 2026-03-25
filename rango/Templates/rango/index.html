@@ -1,0 +1,85 @@
+{% extends 'rango/base.html' %}
+
+{% block title_block %}
+Home
+{% endblock %}
+
+{% block body_block %}
+<section class="splash-hero">
+    <div class="splash-overlay">
+        <p class="hero-small">WELCOME TO</p>
+
+        <div class="hero-logo">
+            <span class="hero-logo-top">ABSOLUTE</span>
+            <span class="hero-logo-bottom">CINEMA</span>
+        </div>
+
+        <p class="hero-main-line">Track films. Review them. Throw roses.</p>
+        <p class="hero-sub-line">DISCOVER WHAT TO WATCH NEXT</p>
+
+        <div class="hero-buttons">
+            <a href="{% url 'rango:discover' %}" class="hero-btn hero-btn-red">DISCOVER</a>
+            <a href="{% url 'rango:login' %}" class="hero-btn hero-btn-dark">LOGIN</a>
+        </div>
+    </div>
+</section>
+
+<section class="content-page home-page-bg">
+    <div class="row-section">
+        <h2>Trending <span>Now</span></h2>
+
+        <div class="poster-row">
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' %}">
+                    <div class="poster-placeholder">MOVIE POSTER</div>
+                </a>
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>Sinners</h3>
+                <p class="poster-meta">2024 <span class="mini-roses">• • • • •</span></p>
+            </div>
+
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' %}">
+                    <div class="poster-placeholder">MOVIE POSTER</div>
+                </a>
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>Conclave</h3>
+                <p class="poster-meta">2024 <span class="mini-roses">• • • •</span></p>
+            </div>
+
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' %}">
+                    <div class="poster-placeholder">MOVIE POSTER</div>
+                </a>
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>Barbie</h3>
+                <p class="poster-meta">2023 <span class="mini-roses">• • • • •</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-section">
+        <h2>Continue <span>Watching</span></h2>
+
+        <div class="poster-row smaller-row">
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' %}">
+                    <div class="poster-placeholder">SERIES POSTER</div>
+                </a>
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>Stranger Things</h3>
+                <p class="poster-meta">Series <span class="mini-roses">• • • •</span></p>
+            </div>
+
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' %}">
+                    <div class="poster-placeholder">MOVIE POSTER</div>
+                </a>
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>Life of Pi</h3>
+                <p class="poster-meta">2012 <span class="mini-roses">• • •</span></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

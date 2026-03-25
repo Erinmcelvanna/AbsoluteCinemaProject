@@ -1,0 +1,54 @@
+{% extends 'rango/base.html' %}
+
+{% block title_block %}
+Login
+{% endblock %}
+
+{% block body_block %}
+<section class="login-page">
+
+    <div class="login-left">
+        <div class="login-quote">
+            Every rose<br>
+            thrown<br>
+            is a<br>
+            <span>performance</span><br>
+            remembered.
+        </div>
+    </div>
+
+    <div class="login-right">
+        <div class="login-panel">
+
+            <div class="login-tabs">
+                <a href="{% url 'rango:login' %}" class="active">LOGIN</a>
+                <a href="{% url 'rango:register' %}">JOIN THE THEATRE</a>
+            </div>
+
+            <div class="login-form-wrap">
+                <h2>Welcome back.</h2>
+
+                <form method="post" class="login-form">
+                    {% csrf_token %}
+
+                    <label for="id_username">EMAIL OR USERNAME</label>
+                    <input type="text" name="username" id="id_username" placeholder="you@example.com">
+
+                    <label for="id_password">PASSWORD</label>
+                    <input type="password" name="password" id="id_password" placeholder="********">
+
+                    <p class="forgot-link">FORGOT PASSWORD?</p>
+
+                    <input type="submit" value="TAKE YOUR SEAT" class="login-submit">
+                </form>
+
+                <p class="join-link">
+                    No account? <a href="{% url 'rango:register' %}">Join the theatre</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+{% endblock %}
