@@ -28,6 +28,10 @@ Login
             <div class="login-form-wrap">
                 <h2>Welcome back.</h2>
 
+                {% if error %}
+                    <p class="form-error">{{ error }}</p>
+                {% endif %}
+
                 <form method="post" class="login-form">
                     {% csrf_token %}
 

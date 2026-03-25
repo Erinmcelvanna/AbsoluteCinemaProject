@@ -57,6 +57,10 @@ def login_view(request):
 
     return render(request, 'rango/login.html', context)
 
+def logout_view(request):
+    logout(request)
+    return redirect('rango:index')
+
 
 def discover(request):
     query = request.GET.get('q', '').strip()
@@ -70,7 +74,7 @@ def discover(request):
 
     return render(request, 'rango/discover.html', {'movies': movies})
 
-
+@login_required
 def profile(request):
     if request.user.is_authenticated:
         favourite_movies = list(
