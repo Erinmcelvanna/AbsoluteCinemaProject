@@ -23,14 +23,12 @@ Movie Detail
                 <p>{{ movie.year }}</p>
 
                 <p>
-                    {{ movie.description }}
+                    {{ movie.description|default:"No description available." }}
                 </p>
 
                 <button class="fav-btn"
                         data-movie="{{ movie.id }}">
-
                     Add to Favourites
-
                 </button>
 
                 <div class="rose-input">
@@ -50,5 +48,8 @@ Movie Detail
     </div>
 
 </section>
+
+{% load static %}
+<script src="{% static 'js/movie.js' %}"></script>
 
 {% endblock %}
