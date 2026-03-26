@@ -5,34 +5,51 @@ Discover
 {% endblock %}
 
 {% block body_block %}
+
 <section class="discover-top">
+
     <h1>Discover</h1>
 
     <form method="get" class="discover-search">
-        <input type="text" name="q" placeholder="Search films, series, directors, actors, genre...">
+
+        <input id="search-box"
+               type="text"
+               name="q"
+               placeholder="Search films, series, directors, actors, genre...">
+
     </form>
 
-    <div class="discover-filters">
-        <span class="filter active">ALL</span>
-    
-    </div>
 </section>
+
 
 <section class="content-page discover-page-bg">
-    <div class="discover-grid">
+
+    <div id="movie-results" class="discover-grid">
+
         {% for movie in movies %}
+
         <div class="poster-card">
-            <a href="{% url 'rango:movie_detail' %}">
+
+            <a href="{% url 'rango:movie_detail' movie.id %}">
+
                 <div class="poster-placeholder">
-                    MOVIE/SERIES<br>POSTER<br>GOES HERE
+                    POSTER
                 </div>
+
             </a>
 
-            <p class="poster-rose-tag">+ THROW ROSES</p>
-            <h3>{{ movie }}</h3>
-            <p class="poster-meta">2024 <span class="mini-roses">• • • • •</span></p>
+            <h3>{{ movie.title }}</h3>
+
+            <p class="poster-meta">
+                {{ movie.year }}
+            </p>
+
         </div>
+
         {% endfor %}
+
     </div>
+
 </section>
+
 {% endblock %}

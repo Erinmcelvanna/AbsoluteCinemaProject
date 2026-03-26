@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import UserProfile, Movie
+from django.contrib.auth.decorators import login_required
+from .models import UserProfile, Movie, Favourite
+from django.http import JsonResponse
 
 
 def index(request):
@@ -13,9 +15,11 @@ def home(request):
 
 
 def register_view(request):
+
     context = {}
 
     if request.method == 'POST':
+
         email = request.POST.get('email')
         username = request.POST.get('username')
         password1 = request.POST.get('password1')
@@ -23,60 +27,85 @@ def register_view(request):
 
         if not email or not username or not password1 or not password2:
             context['error'] = 'Please fill in all fields.'
+
         elif password1 != password2:
             context['error'] = 'Passwords do not match.'
+
         elif User.objects.filter(username=username).exists():
             context['error'] = 'Username already exists.'
+
         else:
             user = User.objects.create_user(
                 username=username,
                 email=email,
                 password=password1
             )
+
             UserProfile.objects.get_or_create(user=user)
+
             login(request, user)
+
             return redirect('rango:profile')
 
     return render(request, 'rango/register.html', context)
 
 
 def login_view(request):
+
     context = {}
 
     if request.method == 'POST':
+
         username = request.POST.get('username')
         password = request.POST.get('password')
 
         user = authenticate(username=username, password=password)
 
         if user is not None:
+
             login(request, user)
+
             return redirect('rango:profile')
+
         else:
             context['error'] = 'Invalid username or password.'
 
     return render(request, 'rango/login.html', context)
 
+
 def logout_view(request):
+
     logout(request)
+
     return redirect('rango:index')
 
 
 def discover(request):
+
     query = request.GET.get('q', '').strip()
 
     if query:
-        movies = list(
-            Movie.objects.filter(title__icontains=query).values_list('title', flat=True)
-        )
-    else:
-        movies = list(Movie.objects.values_list('title', flat=True))
 
-    return render(request, 'rango/discover.html', {'movies': movies})
+        movies = Movie.objects.filter(
+            title__icontains=query
+        )
+
+    else:
+
+        movies = Movie.objects.all()
+
+    context = {
+        'movies': movies
+    }
+
+    return render(request, 'rango/discover.html', context)
+
 
 @login_required
 def profile(request):
+
     if request.user.is_authenticated:
+
         favourite_movies = list(
             Movie.objects.filter(favourited_by__user=request.user)
             .distinct()
@@ -88,7 +117,9 @@ def profile(request):
             .distinct()
             .values_list('title', flat=True)[:4]
         )
+
     else:
+
         favourite_movies = []
         recently_watched = []
 
@@ -100,7 +131,30 @@ def profile(request):
     return render(request, 'rango/profile.html', context)
 
 
-def movie_detail(request):
-    movie = Movie.objects.first()
-    context = {'movie': movie}
+def movie_detail(request, movie_id):
+
+    movie = Movie.objects.get(id=movie_id)
+
+    context = {
+        'movie': movie
+    }
+
     return render(request, 'rango/movieDetail.html', context)
+
+
+@login_required
+def add_favourite(request, movie_id):
+    if request.method == "POST":
+        try:
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
+            return JsonResponse({"status": "failed", "error": "Movie not found"})
+
+        Favourite.objects.get_or_create(
+            user=request.user,
+            movie=movie
+        )
+
+        return JsonResponse({"status": "success"})
+
+    return JsonResponse({"status": "failed"})
