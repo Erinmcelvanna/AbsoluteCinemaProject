@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import UserProfile, Movie
 
@@ -57,6 +58,7 @@ def login_view(request):
 
     return render(request, 'rango/login.html', context)
 
+
 def logout_view(request):
     logout(request)
     return redirect('rango:index')
@@ -66,31 +68,26 @@ def discover(request):
     query = request.GET.get('q', '').strip()
 
     if query:
-        movies = list(
-            Movie.objects.filter(title__icontains=query).values_list('title', flat=True)
-        )
+        movies = Movie.objects.filter(title__icontains=query)
     else:
-        movies = list(Movie.objects.values_list('title', flat=True))
+        movies = Movie.objects.all()
 
     return render(request, 'rango/discover.html', {'movies': movies})
 
+
 @login_required
 def profile(request):
-    if request.user.is_authenticated:
-        favourite_movies = list(
-            Movie.objects.filter(favourited_by__user=request.user)
-            .distinct()
-            .values_list('title', flat=True)
-        )
+    favourite_movies = list(
+        Movie.objects.filter(favourited_by__user=request.user)
+        .distinct()
+        .values_list('title', flat=True)
+    )
 
-        recently_watched = list(
-            Movie.objects.filter(watch_histories__user=request.user)
-            .distinct()
-            .values_list('title', flat=True)[:4]
-        )
-    else:
-        favourite_movies = []
-        recently_watched = []
+    recently_watched = list(
+        Movie.objects.filter(watch_histories__user=request.user)
+        .distinct()
+        .values_list('title', flat=True)[:4]
+    )
 
     context = {
         'favourite_movies': favourite_movies,
@@ -100,7 +97,7 @@ def profile(request):
     return render(request, 'rango/profile.html', context)
 
 
-def movie_detail(request):
-    movie = Movie.objects.first()
+def movie_detail(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
     context = {'movie': movie}
     return render(request, 'rango/movieDetail.html', context)
