@@ -176,44 +176,48 @@ a {
     background-color: #07050c;
 }
 /* Login/register */
+/* Login/register */
 .login-page {
-    min-height: 700px;
-    background: #05030a;
-    font-size: 0;
+    display: flex;
+    min-height: calc(100vh - 96px);
+    background: linear-gradient(to right, #000000 0%, #000000 46%, #05030a 46%, #05030a 100%);
+}
+
+.login-left,
+.login-right {
+    width: 50%;
+    min-height: calc(100vh - 96px);
 }
 
 .login-left {
-    width: 43%;
-    min-height: 700px;
-    display: inline-block;
-    vertical-align: top;
     position: relative;
-    border-right: 1px solid rgba(255,255,255,0.22);
+    border-right: 1px solid rgba(255,255,255,0.18);
     background: #050505;
+    display: flex;
+    align-items: flex-end;
+    padding: 40px 30px;
+    box-sizing: border-box;
 }
 
 .login-right {
-    width: 57%;
-    min-height: 700px;
-    display: inline-block;
-    vertical-align: top;
     background: #05030a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    box-sizing: border-box;
 }
 
 .login-panel {
-    width: 560px;
-    margin-left: 110px;
-    padding-top: 105px;
-    font-size: 16px;
+    width: 100%;
+    max-width: 560px;
 }
 
 .login-quote {
-    position: absolute;
-    left: 24px;
-    bottom: 30px;
-    font-size: 4.1rem;
-    line-height: 0.92;
+    font-size: 5rem;
+    line-height: 0.9;
     color: #f4eee8;
+    max-width: 420px;
 }
 
 .login-quote span {
@@ -222,7 +226,7 @@ a {
 }
 
 .login-tabs {
-    width: 490px;
+    width: 100%;
     border-bottom: 1px solid rgba(255,255,255,0.14);
     padding-bottom: 16px;
     margin-bottom: 38px;
@@ -231,9 +235,9 @@ a {
 .login-tabs a {
     display: inline-block;
     font-family: Arial, sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     letter-spacing: 4px;
-    color: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.28);
     margin-right: 68px;
     padding-bottom: 14px;
 }
@@ -244,14 +248,21 @@ a {
 }
 
 .login-form-wrap {
-    width: 490px;
+    width: 100%;
 }
 
 .login-form-wrap h2 {
-    font-size: 3rem;
+    font-size: 4rem;
     color: #efe6e0;
     font-weight: normal;
-    margin-bottom: 34px;
+    margin-bottom: 28px;
+}
+
+.form-error {
+    color: #ff8f8f;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    margin-bottom: 18px;
 }
 
 .login-form label {
@@ -259,7 +270,7 @@ a {
     font-family: Arial, sans-serif;
     letter-spacing: 4px;
     font-size: 0.82rem;
-    color: rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.22);
     margin-bottom: 12px;
 }
 
@@ -268,17 +279,18 @@ a {
 .login-form input[type="password"] {
     width: 100%;
     height: 60px;
-    background: #3a211f;
-    border: 1px solid #6e3734;
-    color: #d9d0ca;
-    font-size: 1.1rem;
+    background: #e7edf6;
+    border: none;
+    color: #111111;
+    font-size: 1.2rem;
     padding: 0 18px;
     margin-bottom: 24px;
+    box-sizing: border-box;
 }
 
 .login-form input::placeholder {
-    color: rgba(217,208,202,0.28);
-    font-style: italic;
+    color: rgba(0,0,0,0.35);
+    font-style: normal;
 }
 
 .forgot-link {
@@ -286,33 +298,71 @@ a {
     font-family: Arial, sans-serif;
     letter-spacing: 3px;
     font-size: 0.8rem;
-    color: rgba(255,255,255,0.18);
-    margin-top: -8px;
-    margin-bottom: 32px;
+    color: rgba(255,255,255,0.2);
+    margin-top: -6px;
+    margin-bottom: 28px;
 }
 
 .login-submit {
     width: 100%;
-    height: 72px;
+    height: 64px;
     background: #c62828;
-    border: 1px solid #8a1d1d;
+    border: none;
     color: #f3ebe5;
     font-family: Arial, sans-serif;
-    letter-spacing: 7px;
+    letter-spacing: 5px;
     font-size: 1rem;
     margin-top: 8px;
     margin-bottom: 18px;
+    cursor: pointer;
 }
 
 .join-link {
     text-align: right;
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.35);
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.4);
 }
 
 .join-link a {
     color: #cf8d79;
 }
+
+@media (max-width: 1000px) {
+    .login-page {
+        display: block;
+    }
+
+    .login-left,
+    .login-right {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .login-left {
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.18);
+        justify-content: flex-start;
+        align-items: flex-end;
+        min-height: 300px;
+    }
+
+    .login-right {
+        padding: 30px 20px 50px 20px;
+    }
+
+    .login-panel {
+        max-width: 100%;
+    }
+
+    .login-quote {
+        font-size: 3.8rem;
+    }
+
+    .login-form-wrap h2 {
+        font-size: 3rem;
+    }
+}
+
 /* Home/discover */
 .home-page-bg,
 .discover-page-bg {

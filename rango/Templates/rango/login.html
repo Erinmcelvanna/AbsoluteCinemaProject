@@ -22,7 +22,7 @@ Login
 
             <div class="login-tabs">
                 <a href="{% url 'rango:login' %}" class="active">LOGIN</a>
-                <a href="{% url 'rango:register' %}">JOIN THE THEATRE</a>
+                <a href="{% url 'rango:register' %}?next={{ next }}">JOIN THE THEATRE</a>
             </div>
 
             <div class="login-form-wrap">
@@ -34,12 +34,13 @@ Login
 
                 <form method="post" class="login-form">
                     {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next }}">
 
                     <label for="id_username">EMAIL OR USERNAME</label>
-                    <input type="text" name="username" id="id_username" placeholder="you@example.com">
+                    <input type="text" name="username" id="id_username" placeholder="Enter username" required>
 
                     <label for="id_password">PASSWORD</label>
-                    <input type="password" name="password" id="id_password" placeholder="********">
+                    <input type="password" name="password" id="id_password" placeholder="********" required>
 
                     <p class="forgot-link">FORGOT PASSWORD?</p>
 
@@ -47,7 +48,7 @@ Login
                 </form>
 
                 <p class="join-link">
-                    No account? <a href="{% url 'rango:register' %}">Join the theatre</a>
+                    No account? <a href="{% url 'rango:register' %}?next={{ next }}">Join the theatre</a>
                 </p>
             </div>
 

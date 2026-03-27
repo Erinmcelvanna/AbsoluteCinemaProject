@@ -6,29 +6,33 @@ Profile
 
 {% block body_block %}
 <section class="profile-banner">
-    <div class="profile-avatar">E</div>
+    <div class="profile-avatar">
+        {{ request.user.username|first|upper }}
+    </div>
 
     <div class="profile-main">
-        <h1>Erin</h1>
+        <h1>{{ request.user.username }}</h1>
         <p>FILM LOVER</p>
 
         <div class="profile-stats-line">
             <div>
         <span>{{ watched_count }}</span>
         <small>WATCHED</small>
-    </div>
 
-    <div>
-        <span>{{ favourites_count }}</span>
-        <small>FAVOURITES</small>
-    </div>
+            </div>
 
-    <div>
-        <span>{{ reviews_count }}</span>
-        <small>REVIEWS</small>
-    </div>
-</div>
+            <div>
+                <span>{{ favourite_movies}}</span>
+                <small>FAVOURITES</small>
+            </div>
 
+            <div>
+                <span>{{ reviews_count }}</span>
+                <small>REVIEWS</small>
+            </div>
+        </div>
+    </div>
+</section>
 <section class="content-page home-page-bg">
    <div class="row-section">
     <h2>Favourite <span>Movies</span></h2>
