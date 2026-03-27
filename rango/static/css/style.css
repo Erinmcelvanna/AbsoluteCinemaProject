@@ -1,3 +1,4 @@
+/*general styling*/
 * {
     margin: 0;
     padding: 0;
@@ -175,7 +176,7 @@ a {
     background-color: #07050c;
 }
 /* Login/register */
-login-page {
+.login-page {
     min-height: 700px;
     background: #05030a;
     font-size: 0;
@@ -312,28 +313,47 @@ login-page {
 .join-link a {
     color: #cf8d79;
 }
-
-/* Home/discover*/
+/* Home/discover */
 .home-page-bg,
 .discover-page-bg {
     background-color: #070707;
 }
 
-.row-section {
-    margin-bottom: 30px;
+/* Home hero */
+.home-hero {
+    padding: 28px 20px 10px 20px;
+    background-color: #070707;
 }
 
-.row-section h2 {
-    font-size: 20px;
+.home-hero h1 {
+    font-size: 48px;
     color: #f1e8df;
-    margin-bottom: 15px;
+    margin-bottom: 6px;
 }
 
-.row-section h2 span {
-    color: #c85b5b;
+.home-hero p {
+    font-size: 16px;
+    color: #ddd2ca;
+    margin-bottom: 10px;
 }
 
-/* Posters */
+.hero-button {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    border: 1px solid #7c3d3d;
+    padding: 10px 16px;
+    background-color: #111111;
+    color: #f0dfd8;
+}
+
+/* home rows */
+.home-row-section {
+    padding: 10px 20px 24px 20px;
+}
+
 .poster-row {
     white-space: nowrap;
     overflow-x: auto;
@@ -342,35 +362,50 @@ login-page {
 
 .poster-card {
     display: inline-block;
-    width: 128px;
+    width: 150px;
     margin-right: 20px;
     vertical-align: top;
 }
 
+.poster-image {
+    width: 150px;
+    height: 225px;
+    object-fit: cover;
+    display: block;
+    border: 1px solid #8a2d2d;
+    background-color: #330909;
+}
+
 .poster-placeholder {
-    width: 128px;
-    height: 190px;
+    width: 150px;
+    height: 225px;
     border: 1px solid #8a2d2d;
     background-color: #330909;
     color: #f1e8df;
     text-align: center;
     font-size: 12px;
-    padding-top: 75px;
+    padding-top: 88px;
+    box-sizing: border-box;
 }
 
-.poster-rose-tag {
+.poster-rose-tag,
+.rose-link {
     font-family: Arial, sans-serif;
     font-size: 9px;
     letter-spacing: 2px;
     color: #9b4545;
     margin-top: 8px;
     margin-bottom: 8px;
+    text-transform: uppercase;
 }
 
-.poster-card h3 {
+.poster-card h3,
+.movie-card h3 {
     font-size: 15px;
     color: #f0e6de;
     margin-bottom: 3px;
+    line-height: 1.3;
+    white-space: normal;
 }
 
 .poster-meta {
@@ -390,6 +425,37 @@ login-page {
 .smaller-row .poster-card {
     width: 130px;
 }
+
+/* Discover grid */
+.discover-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 24px;
+    padding-top: 24px;
+    text-align: left;
+}
+
+.movie-card {
+    display: block;
+    width: 100%;
+}
+
+.movie-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.discover-grid .poster-image,
+.discover-grid .poster-placeholder {
+    width: 100%;
+    height: 270px;
+}
+
+.discover-grid .movie-card h3 {
+    margin-top: 0;
+}
+
+
 
 /* Discover */
 .discover-top {
@@ -441,14 +507,6 @@ login-page {
     border-color: #8c3c3c;
 }
 
-.discover-grid {
-    text-align: center;
-    padding-top: 24px;
-}
-
-.discover-grid .poster-card {
-    margin-bottom: 25px;
-}
 
 /* Profile */
 .profile-banner {
@@ -578,7 +636,7 @@ login-page {
     margin-bottom: 8px;
 }
 
-/* ROSE INPUT */
+/* Rose input*/
 .rose-input {
     margin: 10px 0 20px 0;
 }
@@ -595,8 +653,8 @@ login-page {
 
 
 @media (max-width: 1200px) {
-    .discover-grid .poster-card {
-        width: 45%;
+    .discover-grid {
+        grid-template-columns: repeat(4, 1fr);
     }
 
     .review-tile {
@@ -606,5 +664,169 @@ login-page {
 
     .nav-links li {
         margin: 0 10px;
+    }
+}
+
+@media (max-width: 900px) {
+    .discover-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .discover-search input {
+        width: 90%;
+    }
+}
+
+@media (max-width: 700px) {
+    .discover-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .poster-card {
+        width: 130px;
+    }
+
+    .poster-image {
+        width: 130px;
+        height: 195px;
+    }
+
+    .poster-placeholder {
+        width: 130px;
+        height: 195px;
+        padding-top: 75px;
+    }
+}
+
+@media (max-width: 500px) {
+    .discover-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .discover-top h1 {
+        font-size: 36px;
+    }
+}
+/* Movie Detail */
+.movie-detail-page {
+    background-color: #070707;
+    padding: 35px 30px 50px 30px;
+    min-height: 700px;
+}
+
+.movie-detail-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.movie-poster-column {
+    display: inline-block;
+    width: 300px;
+    vertical-align: top;
+    margin-right: 35px;
+}
+
+.movie-info-column {
+    display: inline-block;
+    width: calc(100% - 340px);
+    vertical-align: top;
+}
+
+.movie-detail-poster {
+    width: 300px;
+    height: 450px;
+    object-fit: cover;
+    display: block;
+    border: 1px solid #8a2d2d;
+    background-color: #330909;
+}
+
+.movie-detail-placeholder {
+    width: 300px;
+    height: 450px;
+    border: 1px solid #8a2d2d;
+    background-color: #330909;
+    color: #f1e8df;
+    text-align: center;
+    font-size: 14px;
+    padding-top: 210px;
+    box-sizing: border-box;
+}
+
+.movie-info-column h1 {
+    font-size: 54px;
+    color: #f2e7de;
+    margin-bottom: 10px;
+}
+
+.movie-year {
+    font-size: 28px;
+    color: #f2e7de;
+    margin-bottom: 8px;
+}
+
+.movie-type {
+    font-size: 18px;
+    color: #cfc0b7;
+    margin-bottom: 22px;
+}
+
+.movie-overview {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #f0e6de;
+    max-width: 900px;
+    margin-bottom: 28px;
+}
+
+.favourite-btn {
+    width: 220px;
+    height: 44px;
+    background-color: #f1ede8;
+    color: #111111;
+    border: none;
+    font-size: 16px;
+    margin-bottom: 24px;
+    cursor: pointer;
+}
+
+.favourite-btn:hover {
+    background-color: #ddd6cf;
+}
+.movie-detail-page .rose-input {
+    margin-top: 8px;
+}
+
+.movie-detail-page .rose {
+    font-size: 34px;
+    margin-right: 12px;
+    cursor: pointer;
+    color: #666666;
+}
+
+@media (max-width: 900px) {
+    .movie-poster-column,
+    .movie-info-column {
+        display: block;
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .movie-poster-column {
+        margin-bottom: 25px;
+    }
+
+    .movie-detail-poster,
+    .movie-detail-placeholder {
+        width: 260px;
+        height: 390px;
+    }
+
+    .movie-info-column h1 {
+        font-size: 40px;
+    }
+
+    .movie-overview {
+        font-size: 16px;
     }
 }

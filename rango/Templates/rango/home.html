@@ -1,34 +1,114 @@
 {% extends 'rango/base.html' %}
-{% block title_block %}Discover | Absolute Cinema{% endblock %}
-{% block nav_discover %}active{% endblock %}
+{% block title_block %}Home | Absolute Cinema{% endblock %}
+{% block nav_home %}active{% endblock %}
 
 {% block body_block %}
-<section class="discover-top">
-    <h1>Discover</h1>
 
-    <form method="get" class="discover-search">
-        <input type="text" name="q" placeholder="Search films, series, directors, actors, genre...">
-    </form>
-
-    <div class="discover-filters">
-        <span class="filter active">ALL</span>
-        <span class="filter">FILMS</span>
-        <span class="filter">SERIES</span>
+<section class="home-hero">
+    <div class="home-hero-content">
+        <h1>Absolute Cinema</h1>
+        <p>Discover, rate and review your favourite films and series.</p>
+        <a href="{% url 'rango:discover' %}" class="hero-button">Explore Discover</a>
     </div>
 </section>
 
-<section class="content-page discover-page-bg">
-    <div class="discover-grid">
-        {% for i in "123456789101112" %}
-        <div class="poster-card">
-            <div class="poster-placeholder">MOVIE/SERIES<br>POSTER<br>GOES HERE</div>
-            <p class="poster-rose-tag">+ THROW ROSES</p>
-            <h3>
-                {% if forloop.counter == 1 %}Sinners{% elif forloop.counter == 2 %}Conclave{% elif forloop.counter == 3 %}Barbie{% elif forloop.counter == 4 %}Cats{% elif forloop.counter == 5 %}Stranger Things{% elif forloop.counter == 6 %}Bob the Builder{% elif forloop.counter == 7 %}Life of Pi{% else %}Title{% endif %}
-            </h3>
-            <p class="poster-meta">2024 <span class="mini-roses">• • • • •</span></p>
-        </div>
+<section class="home-row-section">
+    <h2>Trending This Week</h2>
+    <div class="poster-row">
+        {% for item in trending %}
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' item.media_type item.id %}">
+                    {% if item.poster_path %}
+                        <img src="https://image.tmdb.org/t/p/w300{{ item.poster_path }}"
+                             alt="{% if item.title %}{{ item.title }}{% else %}{{ item.name }}{% endif %}"
+                             class="poster-image">
+                    {% else %}
+                        <div class="poster-placeholder">NO POSTER</div>
+                    {% endif %}
+                </a>
+
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+
+                <h3>
+                    {% if item.title %}
+                        {{ item.title }}
+                    {% else %}
+                        {{ item.name }}
+                    {% endif %}
+                </h3>
+
+                <p class="poster-meta">
+                    {% if item.release_date %}
+                        {{ item.release_date|slice:":4" }}
+                    {% elif item.first_air_date %}
+                        {{ item.first_air_date|slice:":4" }}
+                    {% endif %}
+                </p>
+            </div>
+        {% empty %}
+            <p>No trending titles found.</p>
         {% endfor %}
     </div>
 </section>
+
+<section class="home-row-section">
+    <h2>Popular Movies</h2>
+    <div class="poster-row">
+        {% for movie in movies %}
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' 'movie' movie.id %}">
+                    {% if movie.poster_path %}
+                        <img src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}"
+                             alt="{{ movie.title }}"
+                             class="poster-image">
+                    {% else %}
+                        <div class="poster-placeholder">NO POSTER</div>
+                    {% endif %}
+                </a>
+
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>{{ movie.title }}</h3>
+
+                <p class="poster-meta">
+                    {% if movie.release_date %}
+                        {{ movie.release_date|slice:":4" }}
+                    {% endif %}
+                </p>
+            </div>
+        {% empty %}
+            <p>No popular movies found.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="home-row-section">
+    <h2>Popular Series</h2>
+    <div class="poster-row">
+        {% for show in tv %}
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' 'tv' show.id %}">
+                    {% if show.poster_path %}
+                        <img src="https://image.tmdb.org/t/p/w300{{ show.poster_path }}"
+                             alt="{{ show.name }}"
+                             class="poster-image">
+                    {% else %}
+                        <div class="poster-placeholder">NO POSTER</div>
+                    {% endif %}
+                </a>
+
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>{{ show.name }}</h3>
+
+                <p class="poster-meta">
+                    {% if show.first_air_date %}
+                        {{ show.first_air_date|slice:":4" }}
+                    {% endif %}
+                </p>
+            </div>
+        {% empty %}
+            <p>No popular series found.</p>
+        {% endfor %}
+    </div>
+</section>
+
 {% endblock %}

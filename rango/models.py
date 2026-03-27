@@ -16,7 +16,7 @@ class UserProfile(models.Model):
 class Movie(models.Model):
     MEDIA_TYPES = (
         ('movie', 'Movie'),
-        ('series', 'Series'),
+        ('tv', 'TV SERIES'),
     )
 
     title = models.CharField(max_length=200)

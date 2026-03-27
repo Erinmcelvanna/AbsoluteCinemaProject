@@ -1,55 +1,69 @@
 {% extends 'rango/base.html' %}
-
 {% block title_block %}
-Movie Detail
+    {% if movie.title %}
+        {{ movie.title }}
+    {% else %}
+        {{ movie.name }}
+    {% endif %}
+    | Absolute Cinema
 {% endblock %}
 
 {% block body_block %}
 
-<section class="content-page home-page-bg">
+<section class="movie-detail-page">
+    <div class="movie-detail-wrap">
 
-    <div class="row-section">
+        <div class="movie-poster-column">
+            {% if movie.poster_path %}
+                <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}"
+                     alt="{% if movie.title %}{{ movie.title }}{% else %}{{ movie.name }}{% endif %}"
+                     class="movie-detail-poster">
+            {% else %}
+                <div class="movie-detail-placeholder">NO POSTER</div>
+            {% endif %}
+        </div>
 
-        <h2>{{ movie.title }}</h2>
+        <div class="movie-info-column">
+            <h1>
+                {% if movie.title %}
+                    {{ movie.title }}
+                {% else %}
+                    {{ movie.name }}
+                {% endif %}
+            </h1>
 
-        <div class="review-tile">
+            <p class="movie-year">
+                {% if movie.release_date %}
+                    {{ movie.release_date|slice:":4" }}
+                {% elif movie.first_air_date %}
+                    {{ movie.first_air_date|slice:":4" }}
+                {% endif %}
+            </p>
 
-            <div class="review-poster">
-                POSTER
+            <p class="movie-type">
+                {% if media_type == "tv" %}
+                    Series
+                {% else %}
+                    Movie
+                {% endif %}
+            </p>
+
+            <p class="movie-overview">
+                {{ movie.overview }}
+            </p>
+
+            <button class="favourite-btn">Add to Favourites</button>
+
+            <div class="rose-input">
+                <span class="rose">🌹</span>
+                <span class="rose">🌹</span>
+                <span class="rose">🌹</span>
+                <span class="rose">🌹</span>
+                <span class="rose">🌹</span>
             </div>
-
-            <div class="review-text">
-
-                <p>{{ movie.year }}</p>
-
-                <p>
-                    {{ movie.description|default:"No description available." }}
-                </p>
-
-                <button class="fav-btn"
-                        data-movie="{{ movie.id }}">
-                    Add to Favourites
-                </button>
-
-                <div class="rose-input">
-
-                    <span class="rose">🌹</span>
-                    <span class="rose">🌹</span>
-                    <span class="rose">🌹</span>
-                    <span class="rose">🌹</span>
-                    <span class="rose">🌹</span>
-
-                </div>
-
-            </div>
-
         </div>
 
     </div>
-
 </section>
-
-{% load static %}
-<script src="{% static 'js/movie.js' %}"></script>
 
 {% endblock %}

@@ -9,10 +9,7 @@ urlpatterns=[
     path('logout/',views.logout_view,name='logout'),
     path('discover/',views.discover,name='discover'),
     path('profile/',views.profile,name='profile'),
-    path('movie/<int:movie_id>/',views.movie_detail,name='movie_detail'),
-    path(
-    'add_favourite/<int:movie_id>/',
-    views.add_favourite,
-    name='add_favourite'
+    path('movie/<str:media_type>/<int:tmdb_id>/', views.movie_detail, name='movie_detail'),
+    path('add_favourite/<int:movie_id>/',views.add_favourite,name='add_favourite'
 ),
 ]

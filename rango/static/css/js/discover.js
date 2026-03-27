@@ -6,7 +6,7 @@ if (searchBox) {
 
         const query = searchBox.value;
 
-        fetch(`/discover/?q=${query}`)
+        fetch(`/discover/?q=${encodeURIComponent(query)}`)
 
         .then(response => response.text())
 
