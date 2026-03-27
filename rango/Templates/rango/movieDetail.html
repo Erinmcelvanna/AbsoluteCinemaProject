@@ -53,15 +53,45 @@
             </p>
 
             <button class="favourite-btn">Add to Favourites</button>
+    
+    <h2>Reviews</h2>
 
-            <div class="rose-input">
-                <span class="rose">🌹</span>
-                <span class="rose">🌹</span>
-                <span class="rose">🌹</span>
-                <span class="rose">🌹</span>
-                <span class="rose">🌹</span>
-            </div>
+    {% for review in reviews %}
+        <div class="review-box">
+            <p><strong>{{ review.user.username }}</strong></p>
+            <p>Rating: {{ review.rating }} 🌹</p>
+            <p>{{ review.review_text }}</p>
+            <p>{{ review.created_at }}</p>
         </div>
+    {% empty %}
+        <p>No reviews yet.</p>
+    {% endfor %}
+
+    <form method="post" action="{% url 'rango:save_review_rating' media_type movie.id %}" class="review-form">
+    {% csrf_token %}
+
+    <div class="rose-rating">
+        <input type="radio" id="rose5" name="rating" value="5" {% if user_rating == 5 %}checked{% endif %}>
+        <label for="rose5">🌹</label>
+
+        <input type="radio" id="rose4" name="rating" value="4" {% if user_rating == 4 %}checked{% endif %}>
+        <label for="rose4">🌹</label>
+
+        <input type="radio" id="rose3" name="rating" value="3" {% if user_rating == 3 %}checked{% endif %}>
+        <label for="rose3">🌹</label>
+
+        <input type="radio" id="rose2" name="rating" value="2" {% if user_rating == 2 %}checked{% endif %}>
+        <label for="rose2">🌹</label>
+
+        <input type="radio" id="rose1" name="rating" value="1" {% if user_rating == 1 %}checked{% endif %}>
+        <label for="rose1">🌹</label>
+    </div>
+
+    <textarea name="content" rows="5" placeholder="Write your review here..."></textarea>
+
+    <button type="submit">Save Review</button>
+</form>
+           
 
     </div>
 </section>

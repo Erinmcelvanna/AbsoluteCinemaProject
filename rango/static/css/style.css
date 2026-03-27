@@ -637,20 +637,35 @@ a {
 }
 
 /* Rose input*/
-.rose-input {
+/* Rose rating */
+.rose-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 10px;
     margin: 10px 0 20px 0;
+    font-size: 32px;
 }
 
-.rose {
-    font-size: 28px;
-    margin-right: 6px;
-    color: #666666;
+.rose-rating input {
+    display: none;
 }
 
-.rose.active {
-    color: #b31414;
+.rose-rating label {
+    cursor: pointer;
+    opacity: 0.35;
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
+.rose-rating label:hover,
+.rose-rating label:hover ~ label {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.rose-rating input:checked ~ label {
+    opacity: 1;
+}
 
 @media (max-width: 1200px) {
     .discover-grid {
@@ -802,6 +817,34 @@ a {
     margin-right: 12px;
     cursor: pointer;
     color: #666666;
+}
+.rose-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 12px;
+    font-size: 40px;
+    margin: 25px 0;
+}
+
+.rose-rating input {
+    display: none;
+}
+
+.rose-rating label {
+    cursor: pointer;
+    opacity: 0.4;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.rose-rating label:hover,
+.rose-rating label:hover ~ label {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.rose-rating input:checked ~ label {
+    opacity: 1;
 }
 
 @media (max-width: 900px) {

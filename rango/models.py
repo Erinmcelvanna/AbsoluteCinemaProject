@@ -18,7 +18,7 @@ class Movie(models.Model):
         ('movie', 'Movie'),
         ('tv', 'TV SERIES'),
     )
-
+    tmdb_id = models.IntegerField(unique=True,default=0)
     title = models.CharField(max_length=200)
     media_type = models.CharField(max_length=10, choices=MEDIA_TYPES, default='movie')
     year = models.PositiveIntegerField()
@@ -60,6 +60,7 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.user.username} reviewed {self.movie.title}"
 
+   
 
 class Favourite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favourites')

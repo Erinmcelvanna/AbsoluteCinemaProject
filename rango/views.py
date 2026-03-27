@@ -4,14 +4,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import requests
+from .models import Movie, Rating, Review
 
-<<<<<<< HEAD
 TMDB_API_KEY ="f0efa2032b75218ca0109f65455e33b3"
-=======
-from .models import UserProfile, Movie, Favourite, WatchHistory
-
-
->>>>>>> 50abc892e6df2d27db9cf04beecc553cb486bf81
 def index(request):
     url = "https://api.themoviedb.org/3/trending/all/week"
     params = {
@@ -31,12 +26,7 @@ def index(request):
     return render(request, 'rango/index.html',context)
 
 def home(request):
-<<<<<<< HEAD
     api_key = "f0efa2032b75218ca0109f65455e33b3"
-=======
-    movies = Movie.objects.all()[:5]
-    return render(request, 'rango/home.html', {'movies': movies})
->>>>>>> 50abc892e6df2d27db9cf04beecc553cb486bf81
 
     # Trending
     trending = requests.get(
@@ -113,17 +103,11 @@ def logout_view(request):
     return redirect('rango:index')
 
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 50abc892e6df2d27db9cf04beecc553cb486bf81
 def discover(request):
     query = request.GET.get('q', '').strip()
     media_type_filter = request.GET.get('type', '').strip()
 
     if query:
-<<<<<<< HEAD
         url = "https://api.themoviedb.org/3/search/multi"
         params = {
             "api_key": "f0efa2032b75218ca0109f65455e33b3",
@@ -137,11 +121,6 @@ def discover(request):
 
     response = requests.get(url, params=params)
     data = response.json()
-=======
-        movies = Movie.objects.filter(title__icontains=query)
-    else:
-        movies = Movie.objects.all()
->>>>>>> 50abc892e6df2d27db9cf04beecc553cb486bf81
 
     movies = data.get("results", [])
     movies = [item for item in movies if item.get("media_type") in ["movie", "tv"]]
@@ -169,8 +148,29 @@ def profile(request):
 
     return render(request, 'rango/profile.html', context)
 
+@login_required
+def save_review_rating(request, media_type, tmdb_id):
+    movie = get_object_or_404(Movie, tmdb_id=tmdb_id)
 
-<<<<<<< HEAD
+    if request.method == "POST":
+        rating_value = request.POST.get("rating")
+        review_text = request.POST.get("content")
+
+        if rating_value:
+            Rating.objects.update_or_create(
+                user=request.user,
+                movie=movie,
+                defaults={"score": int(rating_value)}
+            )
+
+        if review_text and review_text.strip():
+            Review.objects.create(
+                user=request.user,
+                movie=movie,
+                content=review_text.strip()
+            )
+
+    return redirect("rango:movie_detail", media_type=media_type, tmdb_id=tmdb_id)
 
 def movie_detail(request,media_type ,tmdb_id):
     TMDB_API_KEY = "f0efa2032b75218ca0109f65455e33b3"
@@ -184,23 +184,47 @@ def movie_detail(request,media_type ,tmdb_id):
         }
 
     response = requests.get(url, params=params)
-    movie = response.json()
-=======
-def movie_detail(request, movie_id):
-    movie = get_object_or_404(Movie, id=movie_id)
-    context = {'movie': movie}
-    return render(request, 'rango/movieDetail.html', context)
->>>>>>> 50abc892e6df2d27db9cf04beecc553cb486bf81
+    movie_data = response.json()
+
+    title = movie_data.get("title") or movie_data.get("name") or "Unknown Title"
+    release_date = movie_data.get("release_date") or movie_data.get("first_air_date") or ""
+    year = int(release_date[:4]) if release_date and len(release_date) >= 4 else 1
+    poster_path = movie_data.get("poster_path")
+    poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else ""
+    description = movie_data.get("overview", "")
+
+    movie_obj, created = Movie.objects.get_or_create(
+        tmdb_id=tmdb_id,
+        defaults={
+            "title": title,
+            "media_type": media_type,
+            "year": year,
+            "poster": poster_url,
+            "description": description,
+            "cast": "",
+        }
+    )
+
+    reviews = movie_obj.reviews.all()
+    user_rating = None
+
+    if request.user.is_authenticated:
+        existing_rating = Rating.objects.filter(user=request.user, movie=movie_obj).first()
+        if existing_rating:
+            user_rating = existing_rating.score
 
     return render(request, "rango/movieDetail.html", {
-        "movie": movie,
-        "media_type": media_type
+        "movie": movie_data,
+        "movie_obj": movie_obj,
+        "media_type": media_type,
+        "reviews": reviews,
+        "user_rating": user_rating,
     })
 
 @login_required
 def add_favourite(request, movie_id):
     if request.method == 'POST':
-        movie = get_object_or_404(Movie, id=movie_id)
+        movie = get_object_or_404(movie, id=movie_id)
 
         Favourite.objects.get_or_create(
             user=request.user,
