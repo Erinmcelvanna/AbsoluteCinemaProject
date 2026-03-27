@@ -63,15 +63,15 @@ class Review(models.Model):
    
 
 class Favourite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favourites')
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='favourited_by')
-    added_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('user', 'movie')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(
+        Movie,
+        related_name="favourited_by",
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
-        return f"{self.user.username} favourited {self.movie.title}"
+        return f"{self.user.username} - {self.movie.title}"
 
 
 class WatchHistory(models.Model):
