@@ -12,7 +12,7 @@ SECRET_KEY = 'django-insecure-x_2$+qy1yj560$pczp!ap+9edzk@-k+9dyj%%7(o89n7c3j&82
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['Akari0desu.pythonanywhere.com']
 
 
 INSTALLED_APPS = [
@@ -85,10 +85,9 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+STATIC_ROOT = '/home/Akari0desu/AbsoluteCinemaProject/static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'rango:login'
-
 LOGIN_REDIRECT_URL = '/profile/'
-
