@@ -139,17 +139,13 @@ def discover(request):
 
 @login_required
 def profile(request):
-
     favourite_movies = Movie.objects.filter(
-        favourite__user=request.user
+        favourited_by__user=request.user
     ).distinct()
-
     recently_watched = Movie.objects.filter(
-        watchhistory__user=request.user
-    ).distinct().order_by('-watchhistory__watched_at')
-
+        watch_histories__user=request.user
+    ).distinct().order_by('-watch_histories__watched_at')
     reviews_count = Review.objects.filter(user=request.user).count()
-
     context = {
         'favourite_movies': favourite_movies,
         'recently_watched': recently_watched,
