@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import requests
-from .models import Movie, Rating, Review
+from .models import Movie, Rating, Review, WatchHistory,Favourite
 
 TMDB_API_KEY ="f0efa2032b75218ca0109f65455e33b3"
 def index(request):
@@ -139,11 +139,14 @@ def profile(request):
 
     recently_watched = Movie.objects.filter(
         watch_histories__user=request.user
-    ).distinct()
-
+    ).distinct().order_by('-watch_histories__watched_at')
+    reviews_count = Review.objects.filter(user=request.user).count()
     context = {
         'favourite_movies': favourite_movies,
         'recently_watched': recently_watched,
+        'watched_count': recently_watched.count(),
+        'favourites_count': favourite_movies.count(),
+        'reviews_count': reviews_count,
     }
 
     return render(request, 'rango/profile.html', context)
@@ -162,7 +165,10 @@ def save_review_rating(request, media_type, tmdb_id):
                 movie=movie,
                 defaults={"score": int(rating_value)}
             )
-
+            WatchHistory.objects.get_or_create(
+                user=request.user,
+                movie=movie
+         )
         if review_text and review_text.strip():
             Review.objects.create(
                 user=request.user,
@@ -224,13 +230,16 @@ def movie_detail(request,media_type ,tmdb_id):
 @login_required
 def add_favourite(request, movie_id):
     if request.method == 'POST':
-        movie = get_object_or_404(movie, id=movie_id)
+        movie = get_object_or_404(Movie, id=movie_id)
 
         Favourite.objects.get_or_create(
             user=request.user,
             movie=movie
         )
+        WatchHistory.objects.get_or_create(
+            user=request.user,
+            movie=movie
+        )
+        return redirect('rango:profile')
 
-        return JsonResponse({"status": "success"})
-
-    return JsonResponse({"status": "failed"})
+    return redirect('rango:profile')

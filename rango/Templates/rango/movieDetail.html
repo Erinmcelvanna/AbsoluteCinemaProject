@@ -51,23 +51,20 @@
             <p class="movie-overview">
                 {{ movie.overview }}
             </p>
-
-            <button class="favourite-btn">Add to Favourites</button>
     
     <h2>Reviews</h2>
 
     {% for review in reviews %}
         <div class="review-box">
             <p><strong>{{ review.user.username }}</strong></p>
-            <p>Rating: {{ review.rating }} 🌹</p>
-            <p>{{ review.review_text }}</p>
+            <p>Rating: {{ review.content}} 🌹</p>
             <p>{{ review.created_at }}</p>
         </div>
     {% empty %}
         <p>No reviews yet.</p>
     {% endfor %}
 
-    <form method="post" action="{% url 'rango:save_review_rating' media_type movie.id %}" class="review-form">
+    <form method="post" action="{% url 'rango:save_review_rating' media_type movie_obj.tmdb_id %}" class="review-form"></form>
     {% csrf_token %}
 
     <div class="rose-rating">
@@ -91,6 +88,12 @@
 
     <button type="submit">Save Review</button>
 </form>
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'rango:add_favourite' movie_obj.id %}">
+        {% csrf_token %}
+        <button type="submit" class="favourite-btn">+ Add to Favourites</button>
+    </form>
+    {% endif %}
            
 
     </div>
