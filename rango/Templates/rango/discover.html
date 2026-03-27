@@ -27,38 +27,37 @@
 <section class="content-page discover-page-bg">
     <div id="movie-results" class="discover-grid">
         {% for movie in movies %}
-            <div class="movie-card">
-                <a href="{% url 'rango:movie_detail' movie.media_type movie.id %}"><a href="{% url 'rango:movie_detail' movie.media_type movie.id %}" class="throw-roses-btn"></a>
-                    {% if movie.poster_path %}
-                        <img
-                            src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}"
-                            alt="{% if movie.title %}{{ movie.title }}{% else %}{{ movie.name }}{% endif %}"
-                            class="poster-image">
-                    {% else %}
-                        <div class="poster-placeholder">NO POSTER</div>
-                    {% endif %}
-                </a>
+    <div class="movie-card">
+        <a href="{% url 'rango:movie_detail' movie.media_type movie.id %}" class="movie-link">
+            {% if movie.poster_path %}
+                <img
+                    src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}"
+                    alt="{% if movie.title %}{{ movie.title }}{% else %}{{ movie.name }}{% endif %}"
+                    class="poster-image">
+            {% else %}
+                <div class="poster-placeholder">NO POSTER</div>
+            {% endif %}
 
-                    
-                <h3>
-                    {% if movie.title %}
-                        {{ movie.title }}
-                    {% else %}
-                        {{ movie.name }}
-                    {% endif %}
-                </h3>
+            <h3>
+                {% if movie.title %}
+                    {{ movie.title }}
+                {% else %}
+                    {{ movie.name }}
+                {% endif %}
+            </h3>
 
-                <p class="poster-meta">
-                    {% if movie.release_date %}
-                        {{ movie.release_date|slice:":4" }}
-                    {% elif movie.first_air_date %}
-                        {{ movie.first_air_date|slice:":4" }}
-                    {% endif %}
-                </p>
-            </div>
-        {% empty %}
-            <p>No movies found.</p>
-        {% endfor %}
+            <p class="poster-meta">
+                {% if movie.release_date %}
+                    {{ movie.release_date|slice:":4" }}
+                {% elif movie.first_air_date %}
+                    {{ movie.first_air_date|slice:":4" }}
+                {% endif %}
+            </p>
+        </a>
+    </div>
+{% empty %}
+    <p>No movies found.</p>
+{% endfor %}
     </div>
 </section>
 
