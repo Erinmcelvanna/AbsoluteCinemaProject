@@ -31,16 +31,21 @@ Home
         <div class="poster-row">
             {% for item in trending_titles %}
             <div class="poster-card">
+<<<<<<< HEAD
                 <a href="{% url 'rango:movie_detail' item.media_type item.id %}">
                     {% if item.poster_path %}
                     <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
                           alt="{% if item.title %}{{ item.title }}{% else %}{{ item.name }}{% endif %}"
                          class="poster-image">
                 {% else %}
+=======
+                <a href="{% url 'rango:movie_detail' 1 %}">   {# ✅ fixed #}
+>>>>>>> 50abc892e6df2d27db9cf04beecc553cb486bf81
                     <div class="poster-placeholder">MOVIE POSTER</div>
                 {% endif %}
                 </a>
                 <p class="poster-rose-tag">+ THROW ROSES</p>
+<<<<<<< HEAD
                 <h3>
                         {% if item.title %}
                             {{ item.title }}
@@ -70,6 +75,53 @@ Home
             {% empty %}
                 <p>No trending titles available.</p>
             {% endfor %}
+=======
+                <h3>Sinners</h3>
+                <p class="poster-meta">2024 <span class="mini-roses">• • • • •</span></p>
+            </div>
+
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' 2 %}">   {# ✅ fixed #}
+                    <div class="poster-placeholder">MOVIE POSTER</div>
+                </a>
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>Conclave</h3>
+                <p class="poster-meta">2024 <span class="mini-roses">• • • •</span></p>
+            </div>
+
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' 3 %}">   {# ✅ fixed #}
+                    <div class="poster-placeholder">MOVIE POSTER</div>
+                </a>
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>Barbie</h3>
+                <p class="poster-meta">2023 <span class="mini-roses">• • • • •</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-section">
+        <h2>Continue <span>Watching</span></h2>
+
+        <div class="poster-row smaller-row">
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' 4 %}">   {# ✅ fixed #}
+                    <div class="poster-placeholder">SERIES POSTER</div>
+                </a>
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>Stranger Things</h3>
+                <p class="poster-meta">Series <span class="mini-roses">• • • •</span></p>
+            </div>
+
+            <div class="poster-card">
+                <a href="{% url 'rango:movie_detail' 5 %}">   {# ✅ fixed #}
+                    <div class="poster-placeholder">MOVIE POSTER</div>
+                </a>
+                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <h3>Life of Pi</h3>
+                <p class="poster-meta">2012 <span class="mini-roses">• • •</span></p>
+            </div>
+>>>>>>> 50abc892e6df2d27db9cf04beecc553cb486bf81
         </div>
     </div>
 </section>
