@@ -91,3 +91,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'rango:login'
 
 LOGIN_REDIRECT_URL = '/profile/'
+
