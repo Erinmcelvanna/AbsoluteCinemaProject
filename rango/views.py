@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import UserProfile, Movie
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
+from .models import UserProfile, Movie, Favourite, WatchHistory
 
 
 def index(request):
@@ -10,7 +12,8 @@ def index(request):
 
 
 def home(request):
-    return render(request, 'rango/home.html')
+    movies = Movie.objects.all()[:5]
+    return render(request, 'rango/home.html', {'movies': movies})
 
 
 def register_view(request):
@@ -72,22 +75,22 @@ def discover(request):
     else:
         movies = Movie.objects.all()
 
-    return render(request, 'rango/discover.html', {'movies': movies})
+    context = {
+        'movies': movies
+    }
+
+    return render(request, 'rango/discover.html', context)
 
 
 @login_required
 def profile(request):
-    favourite_movies = list(
-        Movie.objects.filter(favourited_by__user=request.user)
-        .distinct()
-        .values_list('title', flat=True)
-    )
+    favourite_movies = Movie.objects.filter(
+        favourited_by__user=request.user
+    ).distinct()
 
-    recently_watched = list(
-        Movie.objects.filter(watch_histories__user=request.user)
-        .distinct()
-        .values_list('title', flat=True)[:4]
-    )
+    recently_watched = Movie.objects.filter(
+        watch_histories__user=request.user
+    ).distinct()
 
     context = {
         'favourite_movies': favourite_movies,
@@ -101,3 +104,18 @@ def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
     context = {'movie': movie}
     return render(request, 'rango/movieDetail.html', context)
+
+
+@login_required
+def add_favourite(request, movie_id):
+    if request.method == 'POST':
+        movie = get_object_or_404(Movie, id=movie_id)
+
+        Favourite.objects.get_or_create(
+            user=request.user,
+            movie=movie
+        )
+
+        return JsonResponse({"status": "success"})
+
+    return JsonResponse({"status": "failed"})
