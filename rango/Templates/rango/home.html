@@ -1,0 +1,34 @@
+{% extends 'rango/base.html' %}
+{% block title %}Discover | Absolute Cinema{% endblock %}
+{% block nav_discover %}active{% endblock %}
+
+{% block content %}
+<section class="discover-top">
+    <h1>Discover</h1>
+
+    <form method="get" class="discover-search">
+        <input type="text" name="q" placeholder="Search films, series, directors, actors, genre...">
+    </form>
+
+    <div class="discover-filters">
+        <span class="filter active">ALL</span>
+        <span class="filter">FILMS</span>
+        <span class="filter">SERIES</span>
+    </div>
+</section>
+
+<section class="content-page discover-page-bg">
+    <div class="discover-grid">
+        {% for i in "123456789101112" %}
+        <div class="poster-card">
+            <div class="poster-placeholder">MOVIE/SERIES<br>POSTER<br>GOES HERE</div>
+            <p class="poster-rose-tag">+ THROW ROSES</p>
+            <h3>
+                {% if forloop.counter == 1 %}Sinners{% elif forloop.counter == 2 %}Conclave{% elif forloop.counter == 3 %}Barbie{% elif forloop.counter == 4 %}Cats{% elif forloop.counter == 5 %}Stranger Things{% elif forloop.counter == 6 %}Bob the Builder{% elif forloop.counter == 7 %}Life of Pi{% else %}Title{% endif %}
+            </h3>
+            <p class="poster-meta">2024 <span class="mini-roses">• • • • •</span></p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
