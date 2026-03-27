@@ -4,8 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import requests
-
-from .models import Movie, Rating, Review, Favourite, UserProfile
+from .models import Movie, Rating, Review, Favourite, UserProfile,WatchHistory
 
 TMDB_API_KEY = "f0efa2032b75218ca0109f65455e33b3"
 
@@ -18,7 +17,9 @@ def index(request):
 
     response = requests.get(url, params=params)
     data = response.json()
-    trending_titles = data.get("results", [])[:10]
+    print("STATUS CODE:", response.status_code, flush=True)
+    print("NUMBER OF RESULTS:", len(data.get("results", [])), flush=True)
+    trending_titles = data.get("results", [])
 
     context = {
         "trending_titles": trending_titles
@@ -132,7 +133,7 @@ def discover(request):
         movies = [item for item in movies if item.get("media_type") == media_type_filter]
 
     return render(request, "rango/discover.html", {
-        "movies": movies
+        "movies": movies,"selected_type": media_type_filter,
     })
 
 
@@ -144,14 +145,14 @@ def profile(request):
 
     recently_watched = Movie.objects.filter(
         watch_histories__user=request.user
-    ).distinct()
-
-    review_count = Review.objects.filter(user=request.user).count()
-
+    ).distinct().order_by('-watch_histories__watched_at')
+    reviews_count = Review.objects.filter(user=request.user).count()
     context = {
         'favourite_movies': favourite_movies,
         'recently_watched': recently_watched,
-        'review_count': review_count,
+        'watched_count': recently_watched.count(),
+        'favourites_count': favourite_movies.count(),
+        'reviews_count': reviews_count,
     }
 
     return render(request, 'rango/profile.html', context)
@@ -171,7 +172,10 @@ def save_review_rating(request, media_type, tmdb_id):
                 movie=movie,
                 defaults={"score": int(rating_value)}
             )
-
+            WatchHistory.objects.get_or_create(
+                user=request.user,
+                movie=movie
+         )
         if review_text and review_text.strip():
             Review.objects.create(
                 user=request.user,
@@ -240,7 +244,10 @@ def add_favourite(request, movie_id):
             user=request.user,
             movie=movie
         )
+        WatchHistory.objects.get_or_create(
+            user=request.user,
+            movie=movie
+        )
+        return redirect('rango:profile')
 
-        return JsonResponse({"status": "success"})
-
-    return JsonResponse({"status": "failed"})
+    return redirect('rango:profile')
