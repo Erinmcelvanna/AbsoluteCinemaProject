@@ -1,0 +1,81 @@
+{% extends 'rango/base.html' %}
+
+{% block title_block %}
+Profile
+{% endblock %}
+
+{% block body_block %}
+<section class="profile-banner">
+    <div class="profile-avatar">
+        {{ request.user.username|first|upper }}
+    </div>
+
+    <div class="profile-main">
+        <h1>{{ request.user.username }}</h1>
+        <p>FILM LOVER</p>
+
+        <div class="profile-stats-line">
+            <div>
+        <span>{{ watched_count }}</span>
+        <small>WATCHED</small>
+
+            </div>
+
+            <div>
+                <span>{{ favourites_count}}</span>
+                <small>FAVOURITES</small>
+            </div>
+
+            <div>
+                <span>{{ reviews_count }}</span>
+                <small>REVIEWS</small>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content-page home-page-bg">
+   <div class="row-section">
+    <h2>Favourite <span>Movies</span></h2>
+
+    <div class="poster-row">
+        {% for movie in favourite_movies %}
+        <div class="poster-card">
+            <a href="{% url 'rango:movie_detail' movie.media_type movie.tmdb_id %}">
+                {% if movie.poster %}
+                    <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+                {% else %}
+                    <div class="poster-placeholder">MOVIE POSTER</div>
+                {% endif %}
+            </a>
+            <h3>{{ movie.title }}</h3>
+            <p class="poster-meta">Favourite</p>
+        </div>
+        {% empty %}
+        <p>No favourites yet.</p>
+        {% endfor %}
+    </div>
+</div>
+<div class="row-section">
+    <h2>Recently <span>Watched</span></h2>
+
+    <div class="poster-row smaller-row">
+        {% for movie in recently_watched %}
+        <div class="poster-card">
+            <a href="{% url 'rango:movie_detail' movie.media_type movie.tmdb_id %}">
+                {% if movie.poster %}
+                    <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+                {% else %}
+                    <div class="poster-placeholder">MOVIE POSTER</div>
+                {% endif %}
+            </a>
+            <h3>{{ movie.title }}</h3>
+            <p class="poster-meta">Watched recently</p>
+        </div>
+        {% empty %}
+        <p>No watched films yet.</p>
+        {% endfor %}
+    </div>
+</div>
+  
+</section>
+{% endblock %}

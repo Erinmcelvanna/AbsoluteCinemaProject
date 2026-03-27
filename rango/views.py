@@ -142,7 +142,6 @@ def profile(request):
     favourite_movies = Movie.objects.filter(
         favourited_by__user=request.user
     ).distinct()
-
     recently_watched = Movie.objects.filter(
         watch_histories__user=request.user
     ).distinct().order_by('-watch_histories__watched_at')
@@ -156,7 +155,6 @@ def profile(request):
     }
 
     return render(request, 'rango/profile.html', context)
-
 
 @login_required
 def save_review_rating(request, media_type, tmdb_id):
@@ -172,10 +170,7 @@ def save_review_rating(request, media_type, tmdb_id):
                 movie=movie,
                 defaults={"score": int(rating_value)}
             )
-            WatchHistory.objects.get_or_create(
-                user=request.user,
-                movie=movie
-         )
+
         if review_text and review_text.strip():
             Review.objects.create(
                 user=request.user,
@@ -183,10 +178,17 @@ def save_review_rating(request, media_type, tmdb_id):
                 content=review_text.strip()
             )
 
+        if rating_value or (review_text and review_text.strip()):
+            WatchHistory.objects.get_or_create(
+                user=request.user,
+                movie=movie
+            )
+
     return redirect("rango:movie_detail", media_type=media_type, tmdb_id=tmdb_id)
 
-
 def movie_detail(request, media_type, tmdb_id):
+    TMDB_API_KEY = "f0efa2032b75218ca0109f65455e33b3"
+
     if media_type == "tv":
         url = f"https://api.themoviedb.org/3/tv/{tmdb_id}"
     else:
@@ -218,9 +220,25 @@ def movie_detail(request, media_type, tmdb_id):
         }
     )
 
-    reviews = movie_obj.reviews.all()
-    user_rating = None
+    if not created:
+        movie_obj.title = title
+        movie_obj.media_type = media_type
+        movie_obj.year = year
+        movie_obj.poster = poster_url
+        movie_obj.description = description
+        movie_obj.save()
 
+    reviews = movie_obj.reviews.all()
+
+    reviews_with_ratings = []
+    for review in reviews:
+        rating = Rating.objects.filter(user=review.user, movie=movie_obj).first()
+        reviews_with_ratings.append({
+            "review": review,
+            "rating": rating.score if rating else None,
+        })
+
+    user_rating = None
     if request.user.is_authenticated:
         existing_rating = Rating.objects.filter(user=request.user, movie=movie_obj).first()
         if existing_rating:
@@ -230,11 +248,9 @@ def movie_detail(request, media_type, tmdb_id):
         "movie": movie_data,
         "movie_obj": movie_obj,
         "media_type": media_type,
-        "reviews": reviews,
+        "reviews_with_ratings": reviews_with_ratings,
         "user_rating": user_rating,
     })
-
-
 @login_required
 def add_favourite(request, movie_id):
     if request.method == 'POST':
