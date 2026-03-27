@@ -4,46 +4,44 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import requests
-from .models import Movie, Rating, Review
 
-TMDB_API_KEY ="f0efa2032b75218ca0109f65455e33b3"
+from .models import Movie, Rating, Review, Favourite, UserProfile
+
+TMDB_API_KEY = "f0efa2032b75218ca0109f65455e33b3"
+
+
 def index(request):
     url = "https://api.themoviedb.org/3/trending/all/week"
     params = {
-        "api_key": "f0efa2032b75218ca0109f65455e33b3"
+        "api_key": TMDB_API_KEY
     }
 
     response = requests.get(url, params=params)
     data = response.json()
-    print("STATUS CODE:", response.status_code, flush=True)
-    print("NUMBER OF RESULTS:", len(data.get("results", [])), flush=True)
     trending_titles = data.get("results", [])[:10]
 
     context = {
         "trending_titles": trending_titles
     }
 
-    return render(request, 'rango/index.html',context)
+    return render(request, 'rango/index.html', context)
+
 
 def home(request):
-    api_key = "f0efa2032b75218ca0109f65455e33b3"
-
-    # Trending
     trending = requests.get(
         "https://api.themoviedb.org/3/trending/all/week",
-        params={"api_key": api_key}
+        params={"api_key": TMDB_API_KEY}
     ).json().get("results", [])
     trending = [item for item in trending if item.get("media_type") in ["movie", "tv"]]
-    # Popular Movies
+
     movies = requests.get(
         "https://api.themoviedb.org/3/movie/popular",
-        params={"api_key": api_key}
+        params={"api_key": TMDB_API_KEY}
     ).json().get("results", [])
 
-    # Popular TV
     tv = requests.get(
         "https://api.themoviedb.org/3/tv/popular",
-        params={"api_key": api_key}
+        params={"api_key": TMDB_API_KEY}
     ).json().get("results", [])
 
     return render(request, "rango/home.html", {
@@ -52,8 +50,10 @@ def home(request):
         "tv": tv[:10],
     })
 
+
 def register_view(request):
     context = {}
+    next_url = request.POST.get('next') or request.GET.get('next') or '/profile/'
 
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -75,26 +75,29 @@ def register_view(request):
             )
             UserProfile.objects.get_or_create(user=user)
             login(request, user)
-            return redirect('rango:profile')
+            return redirect(next_url)
 
+    context['next'] = next_url
     return render(request, 'rango/register.html', context)
 
 
 def login_view(request):
     context = {}
+    next_url = request.POST.get('next') or request.GET.get('next') or '/profile/'
 
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = authenticate(username=username, password=password)
+        user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
-            return redirect('rango:profile')
+            return redirect(next_url)
         else:
             context['error'] = 'Invalid username or password.'
 
+    context['next'] = next_url
     return render(request, 'rango/login.html', context)
 
 
@@ -110,13 +113,13 @@ def discover(request):
     if query:
         url = "https://api.themoviedb.org/3/search/multi"
         params = {
-            "api_key": "f0efa2032b75218ca0109f65455e33b3",
+            "api_key": TMDB_API_KEY,
             "query": query
         }
     else:
         url = "https://api.themoviedb.org/3/trending/all/week"
         params = {
-            "api_key": "f0efa2032b75218ca0109f65455e33b3"
+            "api_key": TMDB_API_KEY
         }
 
     response = requests.get(url, params=params)
@@ -131,6 +134,8 @@ def discover(request):
     return render(request, "rango/discover.html", {
         "movies": movies
     })
+
+
 @login_required
 def profile(request):
     favourite_movies = Movie.objects.filter(
@@ -141,12 +146,16 @@ def profile(request):
         watch_histories__user=request.user
     ).distinct()
 
+    review_count = Review.objects.filter(user=request.user).count()
+
     context = {
         'favourite_movies': favourite_movies,
         'recently_watched': recently_watched,
+        'review_count': review_count,
     }
 
     return render(request, 'rango/profile.html', context)
+
 
 @login_required
 def save_review_rating(request, media_type, tmdb_id):
@@ -172,16 +181,16 @@ def save_review_rating(request, media_type, tmdb_id):
 
     return redirect("rango:movie_detail", media_type=media_type, tmdb_id=tmdb_id)
 
-def movie_detail(request,media_type ,tmdb_id):
-    TMDB_API_KEY = "f0efa2032b75218ca0109f65455e33b3"
+
+def movie_detail(request, media_type, tmdb_id):
     if media_type == "tv":
-            url = f"https://api.themoviedb.org/3/tv/{tmdb_id}"
+        url = f"https://api.themoviedb.org/3/tv/{tmdb_id}"
     else:
-            url = f"https://api.themoviedb.org/3/movie/{tmdb_id}"
+        url = f"https://api.themoviedb.org/3/movie/{tmdb_id}"
 
     params = {
-            "api_key":"f0efa2032b75218ca0109f65455e33b3"
-        }
+        "api_key": TMDB_API_KEY
+    }
 
     response = requests.get(url, params=params)
     movie_data = response.json()
@@ -221,10 +230,11 @@ def movie_detail(request,media_type ,tmdb_id):
         "user_rating": user_rating,
     })
 
+
 @login_required
 def add_favourite(request, movie_id):
     if request.method == 'POST':
-        movie = get_object_or_404(movie, id=movie_id)
+        movie = get_object_or_404(Movie, id=movie_id)
 
         Favourite.objects.get_or_create(
             user=request.user,

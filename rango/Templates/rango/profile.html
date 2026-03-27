@@ -6,25 +6,27 @@ Profile
 
 {% block body_block %}
 <section class="profile-banner">
-    <div class="profile-avatar">E</div>
+    <div class="profile-avatar">
+        {{ request.user.username|first|upper }}
+    </div>
 
     <div class="profile-main">
-        <h1>Erin</h1>
+        <h1>{{ request.user.username }}</h1>
         <p>FILM LOVER</p>
 
         <div class="profile-stats-line">
             <div>
-                <span>45</span>
+                <span>{{ recently_watched|length }}</span>
                 <small>WATCHED</small>
             </div>
 
             <div>
-                <span>12</span>
+                <span>{{ favourite_movies|length }}</span>
                 <small>FAVOURITES</small>
             </div>
 
             <div>
-                <span>8</span>
+                <span>{{ review_count }}</span>
                 <small>REVIEWS</small>
             </div>
         </div>
@@ -38,13 +40,19 @@ Profile
         <div class="poster-row">
             {% for movie in favourite_movies %}
             <div class="poster-card">
-                <a href="{% url 'rango:movie_detail' %}">
-                    <div class="poster-placeholder">MOVIE POSTER</div>
+                <a href="{% url 'rango:movie_detail' movie.media_type movie.tmdb_id %}">
+                    {% if movie.poster %}
+                        <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="poster-image">
+                    {% else %}
+                        <div class="poster-placeholder">MOVIE POSTER</div>
+                    {% endif %}
                 </a>
                 <p class="poster-rose-tag">+ THROW ROSES</p>
-                <h3>{{ movie }}</h3>
-                <p class="poster-meta">Favourite <span class="mini-roses">• • • • •</span></p>
+                <h3>{{ movie.title }}</h3>
+                <p class="poster-meta">Favourite</p>
             </div>
+            {% empty %}
+            <p>No favourite movies yet.</p>
             {% endfor %}
         </div>
     </div>
@@ -55,13 +63,19 @@ Profile
         <div class="poster-row smaller-row">
             {% for movie in recently_watched %}
             <div class="poster-card">
-                <a href="{% url 'rango:movie_detail' %}">
-                    <div class="poster-placeholder">MOVIE POSTER</div>
+                <a href="{% url 'rango:movie_detail' movie.media_type movie.tmdb_id %}">
+                    {% if movie.poster %}
+                        <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="poster-image">
+                    {% else %}
+                        <div class="poster-placeholder">MOVIE POSTER</div>
+                    {% endif %}
                 </a>
                 <p class="poster-rose-tag">+ THROW ROSES</p>
-                <h3>{{ movie }}</h3>
-                <p class="poster-meta">Watched recently <span class="mini-roses">• • • •</span></p>
+                <h3>{{ movie.title }}</h3>
+                <p class="poster-meta">Watched recently</p>
             </div>
+            {% empty %}
+            <p>No watched movies yet.</p>
             {% endfor %}
         </div>
     </div>
