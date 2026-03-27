@@ -846,6 +846,21 @@ a {
 .rose-rating input:checked ~ label {
     opacity: 1;
 }
+.throw-roses-btn {
+    display: inline-block;
+    margin-top: 6px;
+    color: #c94747;
+    text-decoration: none;
+    letter-spacing: 1px;
+    font-size: 12px;
+    text-transform: uppercase;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.throw-roses-btn:hover {
+    color: #f06a6a;
+}
 
 @media (max-width: 900px) {
     .movie-poster-column,

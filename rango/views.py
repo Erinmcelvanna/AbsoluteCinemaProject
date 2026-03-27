@@ -17,7 +17,7 @@ def index(request):
     data = response.json()
     print("STATUS CODE:", response.status_code, flush=True)
     print("NUMBER OF RESULTS:", len(data.get("results", [])), flush=True)
-    trending_titles = data.get("results", [])[:10]
+    trending_titles = data.get("results", [])
 
     context = {
         "trending_titles": trending_titles
@@ -129,7 +129,7 @@ def discover(request):
         movies = [item for item in movies if item.get("media_type") == media_type_filter]
 
     return render(request, "rango/discover.html", {
-        "movies": movies
+        "movies": movies,"selected_type": media_type_filter,
     })
 @login_required
 def profile(request):

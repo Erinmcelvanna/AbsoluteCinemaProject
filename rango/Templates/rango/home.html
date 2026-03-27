@@ -26,8 +26,9 @@
                         <div class="poster-placeholder">NO POSTER</div>
                     {% endif %}
                 </a>
-
-                <p class="poster-rose-tag">+ THROW ROSES</p>
+                <a href="{% url 'rango:movie_detail' item.media_type item.id %}" class="throw-roses-btn">
+    + THROW ROSES
+</a>
 
                 <h3>
                     {% if item.title %}
@@ -66,7 +67,11 @@
                     {% endif %}
                 </a>
 
-                <p class="poster-rose-tag">+ THROW ROSES</p>
+
+                <a href="{% url 'rango:movie_detail' 'movie' movie.id %}" class="throw-roses-btn">
+                    + THROW ROSES
+                </a>
+
                 <h3>{{ movie.title }}</h3>
 
                 <p class="poster-meta">
@@ -96,7 +101,7 @@
                     {% endif %}
                 </a>
 
-                <p class="poster-rose-tag">+ THROW ROSES</p>
+            <a href="{% url 'rango:movie_detail' 'tv' show.id %}" class="throw-roses-btn"></a>
                 <h3>{{ show.name }}</h3>
 
                 <p class="poster-meta">

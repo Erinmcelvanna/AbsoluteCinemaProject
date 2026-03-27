@@ -28,7 +28,7 @@
     <div id="movie-results" class="discover-grid">
         {% for movie in movies %}
             <div class="movie-card">
-                <a href="{% url 'rango:movie_detail' movie.media_type movie.id %}">
+                <a href="{% url 'rango:movie_detail' movie.media_type movie.id %}"><a href="{% url 'rango:movie_detail' movie.media_type movie.id %}" class="throw-roses-btn"></a>
                     {% if movie.poster_path %}
                         <img
                             src="https://image.tmdb.org/t/p/w300{{ movie.poster_path }}"
@@ -39,8 +39,7 @@
                     {% endif %}
                 </a>
 
-                <p class="rose-link">+ THROW ROSES</p>
-
+                    
                 <h3>
                     {% if movie.title %}
                         {{ movie.title }}
